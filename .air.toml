@@ -1,0 +1,8 @@
+root = "."
+tmp_dir = "bin"
+
+[build]
+  args_bin = []
+  bin = "./bin/omdb-bot-tmp"
+  cmd = "go build -o ./bin/omdb-bot-tmp ./cmd"
+  stop_on_error = true

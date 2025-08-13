@@ -1,0 +1,6 @@
+# Compiled output
+mock
+bin
+
+# Environment
+*.env
