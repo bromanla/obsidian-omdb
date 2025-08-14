@@ -1,8 +1,8 @@
 #!/bin/bash
 # Common settings for scripts
 
-UNIT_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 SERVICE_NAME="omdb-bot"
+UNIT_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
 
 # Colored logging
 success() { echo -e "\033[32m[OK]    $*\033[0m"; }   # Green
