@@ -6,9 +6,6 @@ USER_NAME="$USER"
 
 source "$(dirname "$0")/common.sh"
 
-# Build binary
-bash "$SCRIPT_DIR/build.sh"
-
 # Create unit file
 cat <<EOF | sudo tee "$UNIT_FILE" > /dev/null
 [Unit]
