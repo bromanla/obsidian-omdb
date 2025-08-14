@@ -20,6 +20,7 @@ created: {{ now }}
 watched:
 score:
 ---
+#Movie
 
 ![]({{.Poster}})
 

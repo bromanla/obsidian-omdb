@@ -2,6 +2,7 @@ package template
 
 import (
 	"bytes"
+	_ "embed"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -12,12 +13,21 @@ import (
 	"obsidian/omdb/internal/config"
 )
 
+//go:embed assets/movie.md
+var templateContent string
+
 type Client struct {
 	tmpl *template.Template
 }
 
 type Data interface {
 	Sanitize() string
+}
+
+func init() {
+	if templateContent == "" {
+		panic("template.md not embedded!")
+	}
 }
 
 func New() (*Client, error) {
@@ -32,7 +42,7 @@ func New() (*Client, error) {
 	tmpl, err := template.
 		New("template.md").
 		Funcs(funcMap).
-		ParseFiles("template.md")
+		Parse(templateContent)
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse template: %w", err)
