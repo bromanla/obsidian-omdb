@@ -1,6 +1,6 @@
 # 🎥 Obsidian OMDB
 
-## О проекте
+## About
 
 I’m continuing a series of small projects aimed at learning the Go language and its ecosystem.
 
