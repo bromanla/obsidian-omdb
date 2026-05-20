@@ -11,7 +11,9 @@ type Config struct {
 	OmdbKey       string `env:"OMDB_KEY" env-required:"true"`
 	TelegramKey   string `env:"TELEGRAM_KEY" env-required:"true"`
 	TelegramAdmin int64  `env:"TELEGRAM_ADMIN" env-required:"true"`
-	ObsidianPath  string `env:"OBSIDIAN_PATH" env-required:"true"`
+
+	// Default path inside container
+	ObsidianPath string `env:"OBSIDIAN_PATH" env-default:"/data/obsidian"`
 }
 
 var cfg Config

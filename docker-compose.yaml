@@ -1,0 +1,11 @@
+services:
+  omdb-bot:
+    build: .
+    container_name: omdb-bot
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    volumes:
+      - ${OBSIDIAN_DATA_PATH}:/data/obsidian

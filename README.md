@@ -19,39 +19,53 @@ For synchronization, I use Syncthing on a server that’s always online. The app
 
 Create a `.env` file in your project folder with these:
 
-| Variable       | Description                                    |
-| -------------- | ---------------------------------------------- |
-| OMDB_KEY       | OMDb API key for movie searches                |
-| TELEGRAM_KEY   | Telegram Bot API token                         |
-| TELEGRAM_ADMIN | Telegram user ID for access whitelist          |
-| OBSIDIAN_PATH  | Path to Obsidian vault folder for saving notes |
+| Variable           | Description                           |
+| ------------------ | ------------------------------------- |
+| OMDB_KEY           | OMDb API key for movie searches       |
+| TELEGRAM_KEY       | Telegram Bot API token                |
+| TELEGRAM_ADMIN     | Telegram user ID for access whitelist |
+| OBSIDIAN_DATA_PATH | Path to Obsidian vault on the host    |
 
-## 📦 Installation
+## 🐳 Docker Compose
 
-1. Clone the repository:
+1. Clone repository:
 
 ```sh
 git clone https://github.com/bromanla/obsidian-omdb
+cd obsidian-omdb
 ```
 
-2. Build binary:
+2. Create `.env` file:
 
 ```sh
-bash ./bin/build.sh
+cp .env.example .env
 ```
 
-3. Install as systemd service:
+3. Start service:
 
 ```sh
-bash ./bin/install.sh
+docker compose up -d
 ```
 
-> runs as current user
+Your Obsidian vault will be mounted into the container automatically.
 
-To uninstall:
+---
+
+## 🐳 Docker
+
+You can also run the container directly without Docker Compose:
 
 ```sh
-bash ./bin/uninstall.sh
+docker build -t omdb-bot .
+```
+
+```sh
+docker run -d \
+  --name omdb-bot \
+  --restart unless-stopped \
+  --env-file .env \
+  -v ./data:/data/obsidian \
+  omdb-bot
 ```
 
 ### ⚙️ Usage
