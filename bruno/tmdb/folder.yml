@@ -1,0 +1,18 @@
+info:
+  name: tmdb
+  type: folder
+  seq: 1
+
+request:
+  auth:
+    type: bearer
+    token: "{{tmdb_key}}"
+  variables:
+    - name: tmdb_base_url
+      value: https://api.themoviedb.org/3
+    - name: tmdb_key
+      value: "{{process.env.TMDB_TOKEN}}"
+    - name: language
+      value: ru-RU
+    - name: include_adult
+      value: "false"

@@ -1,8 +1,14 @@
 root = "."
-tmp_dir = "bin"
+tmp_dir = ".air/tmp"
+env_files = [".env"]
 
 [build]
-  args_bin = []
-  bin = "./bin/omdb-bot-tmp"
-  cmd = "go build -o ./bin/omdb-bot-tmp ./cmd"
+  cmd = "go build -buildvcs=false -o ./.air/tmp/omdb-bot ./cmd"
+  entrypoint = ["./.air/tmp/omdb-bot"]
+  include_dir = ["cmd", "internal"]
+  include_ext = ["go", "md"]
+  include_file = ["go.mod", "go.sum"]
   stop_on_error = true
+
+[misc]
+  clean_on_exit = true

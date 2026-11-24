@@ -1,2 +1,6 @@
 # Environment
+.env*
+!.env.example
 *.env
+/.air/
+data

@@ -6,6 +6,8 @@ services:
 
     env_file:
       - .env
+    environment:
+      OUTPUT_DIR: /data
 
     volumes:
-      - ${OBSIDIAN_DATA_PATH}:/data/obsidian
+      - ${HOST_OUTPUT_DIR:-./data}:/data

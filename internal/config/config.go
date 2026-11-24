@@ -1,35 +1,89 @@
 package config
 
 import (
-	"log"
-
-	"github.com/ilyakaznacheev/cleanenv"
-	"github.com/joho/godotenv"
+	"errors"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
 )
 
+// Config holds the bot's startup settings.
 type Config struct {
-	OmdbKey       string `env:"OMDB_KEY" env-required:"true"`
-	TelegramKey   string `env:"TELEGRAM_KEY" env-required:"true"`
-	TelegramAdmin int64  `env:"TELEGRAM_ADMIN" env-required:"true"`
+	// OMDb supplies metadata for titles identified by IMDb ID.
+	OmdbToken string
 
-	// Default path inside container
-	ObsidianPath string `env:"OBSIDIAN_PATH" env-default:"/data/obsidian"`
+	// TMDB supplies localized titles and descriptions.
+	TmdbToken    string
+	TmdbLanguage string
+
+	TelegramToken string
+	TelegramUsers []int64 // Users allowed to search for titles and save notes.
+
+	// Directory where the bot saves Markdown files.
+	OutputDir string
 }
 
-var cfg Config
+// Load reads and validates the settings needed at startup.
+func Load() (Config, error) {
+	var env envReader
 
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("[WARNING] .env file not found, using environment variables")
+	cfg := Config{
+		OmdbToken:     env.string("OMDB_TOKEN"),
+		TmdbToken:     env.string("TMDB_TOKEN"),
+		TmdbLanguage:  env.string("TMDB_LANGUAGE", "en-US"),
+		TelegramToken: env.string("TELEGRAM_TOKEN"),
+		TelegramUsers: env.int64List("TELEGRAM_USERS"),
+		OutputDir:     env.string("OUTPUT_DIR", "/data"),
 	}
 
-	err = cleanenv.ReadEnv(&cfg)
-	if err != nil {
-		log.Panicln("[ERROR] failed to read environment variables:", err)
+	if err := env.err(); err != nil {
+		return Config{}, err
 	}
+
+	return cfg, nil
 }
 
-func Get() *Config {
-	return &cfg
+type envReader struct {
+	errs []error
+}
+
+func (env *envReader) err() error {
+	return errors.Join(env.errs...)
+}
+
+func (env *envReader) string(name string, fallback ...string) string {
+	value, ok := os.LookupEnv(name)
+	if len(fallback) > 0 {
+		if !ok {
+			return fallback[0]
+		}
+		return value
+	}
+
+	value = strings.TrimSpace(value)
+	if value == "" {
+		env.errs = append(env.errs, fmt.Errorf("%s is required", name))
+	}
+	return value
+}
+
+func (env *envReader) int64List(name string) []int64 {
+	value := env.string(name)
+	if value == "" {
+		// The required string lookup already recorded the error.
+		return nil
+	}
+
+	var numbers []int64
+	for part := range strings.SplitSeq(value, ",") {
+		number, err := strconv.ParseInt(strings.TrimSpace(part), 10, 64)
+		if err != nil {
+			env.errs = append(env.errs, fmt.Errorf("%s must contain comma-separated integers", name))
+			return nil
+		}
+		numbers = append(numbers, number)
+	}
+
+	return numbers
 }

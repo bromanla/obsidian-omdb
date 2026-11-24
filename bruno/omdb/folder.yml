@@ -1,0 +1,16 @@
+info:
+  name: omdb
+  type: folder
+  seq: 2
+
+request:
+  auth:
+    type: apikey
+    key: apikey
+    value: "{{omdb_key}}"
+    placement: query
+  variables:
+    - name: omdb_base_url
+      value: https://www.omdbapi.com
+    - name: omdb_key
+      value: "{{process.env.OMDB_TOKEN}}"

@@ -1,0 +1,23 @@
+info:
+  name: details
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{omdb_base_url}}/?i={{?ID}}&r=json"
+  params:
+    - name: i
+      value: "{{?ID}}"
+      type: query
+    - name: r
+      value: json
+      type: query
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
